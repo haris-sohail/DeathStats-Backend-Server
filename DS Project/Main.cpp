@@ -15,5 +15,3 @@ int main()
 
 	tree1.LevelOrder(tree1.root);
 }
-
-//MINHAAJ PLEASE KAAM SHURU KARDO
