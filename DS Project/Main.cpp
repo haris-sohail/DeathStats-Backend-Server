@@ -17,5 +17,7 @@ int main()
 	
 	readAndDisplay("C:/Users/Haris'/source/repos/haris-sohail/DS-Project/datafiles/sample1.csv");
 
-	tree1.LevelOrder(tree1.root);
+	//displayMenu();
+
+	//tree1.LevelOrder(tree1.root);
 }
