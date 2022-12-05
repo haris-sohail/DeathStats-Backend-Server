@@ -6,6 +6,9 @@ public:
 	T val;
 	TreeNode* left;
 	TreeNode* right;
+
+	string lineNum;
+	string fileName;
 	int height;
 
 	TreeNode()
