@@ -145,6 +145,7 @@
     <ClInclude Include="SLinkedList.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="TreeNode.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
