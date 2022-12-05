@@ -4,8 +4,11 @@ class TreeNode
 {
 public:
 	T val;
-	TreeNode* left;
-	TreeNode* right;
+	string leftFileNum;
+	string rightFileNum;
+
+	strign leftFilePath;
+	string rightFilePath;
 	int height;
 
 	TreeNode()
