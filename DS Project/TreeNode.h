@@ -7,7 +7,7 @@ public:
 	TreeNode* left;
 	TreeNode* right;
 
-	string fileNum;
+	string lineNum;
 	string fileName;
 	int height;
 
