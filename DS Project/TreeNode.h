@@ -7,7 +7,7 @@ public:
 	string leftFileNum;
 	string rightFileNum;
 
-	strign leftFilePath;
+	string leftFilePath;
 	string rightFilePath;
 	int height;
 
