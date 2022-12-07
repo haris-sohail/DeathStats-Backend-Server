@@ -29,6 +29,25 @@ void displayMenu()
 		<< "================================================================================\n";
 }
 
+int askDataField()
+{
+	int choice;
+	cout << "Which data field do you want to create an index tree? \n";
+	cout << endl << "1: ID" << endl;
+	cout << "2: Year" << endl;
+	cout << "3: 113 Cause Name" << endl;
+	cout << "4: Cause Name" << endl;
+	cout << "5: State" << endl;
+	cout << "6: Deaths" << endl;
+	cout << "7: Age-Adjusted Death Rate" << endl;
+
+	cout << endl << "Enter your choice: ";
+
+	cin >> choice;
+
+	return choice;
+}
+
 void readAndDisplay(string filename)
 {
 	ifstream fileIn;
