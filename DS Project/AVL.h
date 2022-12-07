@@ -285,9 +285,9 @@ public:
 		}
 	}
 
-	/*void createIndexTree()
+	void createIndexTree()
 	{
 
-	}*/
+	}
 
 };
