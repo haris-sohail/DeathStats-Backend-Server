@@ -7,7 +7,7 @@ public:
 	TreeNode* left;
 	TreeNode* right;
 
-	SLinkedList<int> file;
+	SLinkedList<string> file;
 	SLinkedList<int> line;
 
 	int height;

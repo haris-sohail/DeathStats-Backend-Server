@@ -19,18 +19,21 @@ public:
 		return root;
 	}
 
-	TreeNode<T>* insert(T data, TreeNode<T>* root)
+	TreeNode<T>* insert(T data, string filename, int line, TreeNode<T>* root)
 	{
 		if (root == NULL)
 		{
 			root = new TreeNode<T>;
+			
 			root->val = data;
+			root->file.insert(filename);
+			root->line.insert(line);
 			root->left = NULL;
 			root->right = NULL;
 		}
 		else if (data < root->val) // insertion in left subtree
 		{
-			root->left = insert(data, root->left);
+			root->left = insert(data, filename, line, root->left);
 
 			//check imbalancing 
 			if (height(root->left) - height(root->right) == 2)
@@ -47,7 +50,7 @@ public:
 		}
 		else if (data > root->val) // insertion in right subtree
 		{
-			root->right = insert(data, root->right);
+			root->right = insert(data, filename, line, root->right);
 
 			// check imbalancing
 			if (height(root->right) - height(root->left) == 2) // right is heavy
@@ -284,10 +287,4 @@ public:
 			LL(root);
 		}
 	}
-
-	void createIndexTree()
-	{
-
-	}
-
 };
