@@ -7,8 +7,9 @@ public:
 	TreeNode* left;
 	TreeNode* right;
 
-	string lineNum;
-	string fileName;
+	SLinkedList<int> file;
+	SLinkedList<int> line;
+
 	int height;
 
 	TreeNode()
