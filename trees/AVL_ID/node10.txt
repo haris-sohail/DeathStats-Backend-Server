@@ -1,0 +1,5 @@
+12
+../datafiles/sample1.csv,
+13,
+left:../trees/AVL_ID/node11.txt
+right:../trees/AVL_ID/node14.txt

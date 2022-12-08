@@ -88,12 +88,39 @@ int convertStringToInt(int length, string toBeConverted)
 	return result;
 }
 
+void setFileNumber(int numToSet, char*& destination)
+{
+	char initial[] = "../trees/AVL_ID/node";
+
+	int i;
+	for (i = 0; i < strlen(initial); i++)
+	{
+		destination[i] = initial[i];
+	}
+
+	// now we store the number of the file
+	string fileNum = to_string(numToSet);
+
+	for (int j = 0; j < fileNum.length(); j++)
+	{
+		destination[i++] = fileNum[j];
+	}
+
+	char ext[] = ".txt\0";
+
+	for (int j = 0; j <= strlen(ext); j++)
+	{
+		destination[i++] = ext[j];
+	}
+}
+
 void storeTreeInFile(AVL<int>& tree)
 {
 	node<string>* currentNodeFile;
 	node<int>* currentNodeLine;
 
 	char* nodeFilename = new char[50];
+	int fileNum = 1;
 
 	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt");
 
@@ -145,7 +172,11 @@ void storeTreeInFile(AVL<int>& tree)
 			currentNodeLine = currentNodeLine->next;
 		}
 
-		nodeFilename[20]++;
+		nodeO << endl;
+
+		fileNum++;
+		setFileNumber(fileNum, nodeFilename);
+		//nodeFilename[20]++;
 
 		// Push right and left children in the stack
 		if (node->right)
@@ -153,6 +184,53 @@ void storeTreeInFile(AVL<int>& tree)
 		if (node->left)
 			nodeStack.push(node->left);
 	}
+
+	// now open the node files again and store the left and right subtrees' reference 
+
+	fileNum = 1;
+	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt"); // reset to the first file
+
+	stack<TreeNode<int>*> nodeST;
+
+	nodeST.push(tree.root);
+
+	while (nodeST.isEmpty() == false)
+	{
+		TreeNode<int>* Node = nodeST.pop();
+
+		ofstream nodeSubO;
+
+		nodeSubO.open(nodeFilename, ios::app);
+
+		if (Node->left)
+		{
+			nodeSubO << "left:" << Node->left->nodeFileName << endl;
+		}
+		else
+		{
+			nodeSubO << "left:NULL" << endl;
+		}
+
+		if (Node->right)
+		{
+			nodeSubO << "right:" << Node->right->nodeFileName << endl;
+		}
+		else
+		{
+			nodeSubO << "right:NULL" << endl;
+		}
+		
+
+		fileNum++;
+		setFileNumber(fileNum, nodeFilename);
+
+		// Push right and left children in the stack
+		if (Node->right)
+			nodeST.push(Node->right);
+		if (Node->left)
+			nodeST.push(Node->left);
+	}
+
 
 	delete[] nodeFilename;
 }
@@ -210,7 +288,7 @@ void createAVLonID()
 
 		// now we have to store the index tree in files
 
-		
+		indexTree.LevelOrder(indexTree.root);
 		
 		storeTreeInFile(indexTree);
 

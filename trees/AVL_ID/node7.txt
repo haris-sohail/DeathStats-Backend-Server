@@ -1,5 +1,5 @@
-3
+5
 ../datafiles/sample1.csv,
-4,
+6,
 left:NULL
 right:NULL
