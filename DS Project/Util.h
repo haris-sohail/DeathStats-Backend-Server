@@ -10,6 +10,9 @@
 #include<fstream>
 #include<iostream>
 #include<string>
+#include"Stack.h"
+#include"Node.h"
+#include"SLinkedList.h"
 using namespace std;
 
 void displayMenu()
@@ -85,6 +88,75 @@ int convertStringToInt(int length, string toBeConverted)
 	return result;
 }
 
+void storeTreeInFile(AVL<int>& tree)
+{
+	node<string>* currentNodeFile;
+	node<int>* currentNodeLine;
+
+	char* nodeFilename = new char[50];
+
+	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt");
+
+	// data will be stored like this :
+	// 1. key
+	// 2. File(s)  :  file1, file2, .....
+	// 3. Line(s)  :  line1, line2, .....
+	// ==============================
+
+	// store the nodes in a pre order fashion
+
+	stack<TreeNode<int>*> nodeStack;
+
+	nodeStack.push(tree.root);
+
+	while (nodeStack.isEmpty() == false)
+	{
+		TreeNode<int>* node = nodeStack.pop();
+
+		// open the current node file
+		
+		ofstream nodeO(nodeFilename);
+
+		node->nodeFileName = nodeFilename; // store the node filename so that we can access this later
+
+		// no we store the data
+
+		nodeO << node->val << endl;
+
+		// traverse through the list of file names and store them in a comma seperated way
+
+		currentNodeFile = node->file.head;
+
+		while (currentNodeFile)
+		{
+			nodeO << currentNodeFile->val << ",";
+			currentNodeFile = currentNodeFile->next;
+		}
+
+		nodeO << endl;
+
+		// traverse through the list of lines and store them in a comma seperated way
+
+		currentNodeLine = node->line.head;
+
+		while (currentNodeLine)
+		{
+			nodeO << currentNodeLine->val << ",";
+			currentNodeLine = currentNodeLine->next;
+		}
+
+		nodeFilename[20]++;
+
+		// Push right and left children in the stack
+		if (node->right)
+			nodeStack.push(node->right);
+		if (node->left)
+			nodeStack.push(node->left);
+	}
+
+	delete[] nodeFilename;
+}
+
 void createAVLonID()
 {
 	// first we iterate through all the files and create an AVL tree based on the index choice given
@@ -96,7 +168,7 @@ void createAVLonID()
 	char* filename = new char[200];
 	//char currentFile[] = "C:/Users/Haris'/source/repos/haris-sohail/DS-Project/datafiles/NCHS_-_Leading_Causes_of_Death__United_States_1.csv\0";
 
-	char currentFile[] = "C:/Users/Haris'/source/repos/haris-sohail/DS-Project/datafiles/sample1.csv\0";
+	char currentFile[] = "../datafiles/sample1.csv\0";
 
 	strcpy(filename, currentFile);
 
@@ -115,28 +187,33 @@ void createAVLonID()
 
 	if (fileIn)
 	{
-		while (fileIn.eof() == false)
+		while (fileIn.eof() == false) // read the file till the end of file
 		{
 			fileIn.get(temp);
 
-			if (temp == '\n')
+			if (temp == '\n') // in case we find a new line, the ID is stored right after it
 			{
 				line++;
 
-				getline(fileIn, key, ',');
+				getline(fileIn, key, ','); // read until the comma
 
-				if (fileIn.eof() == true)
+				if (fileIn.eof() == true) 
 				{
 					break;
 				}
 
-				intKey = convertStringToInt(key.length(), key);
+				intKey = convertStringToInt(key.length(), key); // convert the character value of ID to int
 
-				indexTree.root = indexTree.insert(intKey, filename, line, indexTree.root);
+				indexTree.root = indexTree.insert(intKey, filename, line, indexTree.root); // insert the index in the tree
 			}
 		}
 
-		indexTree.LevelOrder(indexTree.root);
+		// now we have to store the index tree in files
+
+		
+		
+		storeTreeInFile(indexTree);
+
 	}
 	else
 	{
@@ -144,6 +221,7 @@ void createAVLonID()
 	}
 
 	delete[] filename;
+	
 }
 
 void createAVL(int indexChoice)

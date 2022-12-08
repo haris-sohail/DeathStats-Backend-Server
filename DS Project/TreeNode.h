@@ -7,6 +7,7 @@ public:
 	TreeNode* left;
 	TreeNode* right;
 
+	string nodeFileName; // stores the filename in which node is stored
 	SLinkedList<string> file;
 	SLinkedList<int> line;
 
