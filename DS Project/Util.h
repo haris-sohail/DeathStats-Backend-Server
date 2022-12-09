@@ -86,6 +86,13 @@ int convertStringToInt(int length, string toBeConverted)
 	}
 	//cout << result;
 	return result;
+
+	
+}
+
+double convertStringToDouble(string toBeConverted)
+{
+	return stod(toBeConverted);
 }
 
 void setFileNumber(int numToSet, char*& destination)
@@ -114,7 +121,8 @@ void setFileNumber(int numToSet, char*& destination)
 	}
 }
 
-void storeTreeInFile(AVL<int>& tree)
+template <typename T>
+void storeTreeInFile(AVL<T>& tree)
 {
 	node<string>* currentNodeFile;
 	node<int>* currentNodeLine;
@@ -132,13 +140,13 @@ void storeTreeInFile(AVL<int>& tree)
 
 	// store the nodes in a pre order fashion
 
-	stack<TreeNode<int>*> nodeStack;
+	stack<TreeNode<T>*> nodeStack;
 
 	nodeStack.push(tree.root);
 
 	while (nodeStack.isEmpty() == false)
 	{
-		TreeNode<int>* node = nodeStack.pop();
+		TreeNode<T>* node = nodeStack.pop();
 
 		// open the current node file
 		
@@ -190,13 +198,13 @@ void storeTreeInFile(AVL<int>& tree)
 	fileNum = 1;
 	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt"); // reset to the first file
 
-	stack<TreeNode<int>*> nodeST;
+	stack<TreeNode<T>*> nodeST;
 
 	nodeST.push(tree.root);
 
 	while (nodeST.isEmpty() == false)
 	{
-		TreeNode<int>* Node = nodeST.pop();
+		TreeNode<T>* Node = nodeST.pop();
 
 		ofstream nodeSubO;
 
@@ -261,7 +269,102 @@ void moveCurrentFile(char*& filename, int numToSet)
 	}
 }
 
-void createAVLonID()
+template <typename T> 
+void createAVLonID_Year_Deaths(int dataField)
+{
+	// first we iterate through all the files and create an AVL tree based on the index choice given
+
+	AVL<T> indexTree;
+
+	// ------ declaring variables for filenames
+
+	int fileNum = 1;
+
+	char* filename = new char[200];
+
+	//char currentFile[] = "C:/Users/Haris'/source/repos/haris-sohail/DS-Project/datafiles/NCHS_-_Leading_Causes_of_Death__United_States_1.csv\0";
+
+	for (int i = 0; i < 1; i++, fileNum++) // make index tree on all the files
+	{
+		//moveCurrentFile(filename, fileNum);
+
+		strcpy(filename, "../datafiles/sample1.csv");
+
+		// ------ opening the file
+
+		ifstream fileIn;
+
+		int keyForTree, line = 1;
+
+		string key;
+		int intKey;
+
+		char temp;
+
+		fileIn.open(filename);
+
+		if (fileIn)
+		{
+			while (fileIn.eof() == false) // read the file till the end of file
+			{
+				fileIn.get(temp);
+
+				if (temp == '\n') // in case we find a new line, the ID is stored right after it
+				{
+					line++;
+
+					if (dataField == 1) // ID
+					{
+						getline(fileIn, key, ','); // read until the first comma
+					}
+
+					else if (dataField == 2) // Year
+					{
+						// read until the 2nd comma
+
+						getline(fileIn, key, ',');
+						getline(fileIn, key, ',');
+					}
+					else if (dataField == 6) // Deaths
+					{
+						// read until the 6th comma
+
+						getline(fileIn, key, ',');
+						getline(fileIn, key, ',');
+						getline(fileIn, key, ',');
+						getline(fileIn, key, ',');
+						getline(fileIn, key, ',');
+						getline(fileIn, key, ',');
+						getline(fileIn, key, ',');
+					}
+
+					if (fileIn.eof() == true)
+					{
+						break;
+					}
+
+					intKey = convertStringToInt(key.length(), key); // convert the character value of ID to int
+
+					indexTree.root = indexTree.insert(intKey, filename, line, indexTree.root); // insert the index in the tree
+				}
+			}
+		}
+		else
+		{
+			cout << "Error opening file" << endl;
+		}
+	}
+
+	// now we have to store the index tree in files
+		
+	storeTreeInFile(indexTree);
+	
+
+	delete[] filename;
+	
+}
+
+void createAVLonStringKey()
 {
 	// first we iterate through all the files and create an AVL tree based on the index choice given
 
@@ -324,19 +427,28 @@ void createAVLonID()
 	}
 
 	// now we have to store the index tree in files
-		
+
 	storeTreeInFile(indexTree);
-	
+
 
 	delete[] filename;
-	
+
 }
 
 void createAVL(int indexChoice)
 {
-	if (indexChoice == 1)
+	if ((indexChoice == 1) || (indexChoice == 2) || (indexChoice == 6)) // these are all the int key choices
 	{
-		createAVLonID();
+		createAVLonID_Year_Deaths<int>(indexChoice);
+	}
+	else if ((indexChoice == 7)) // this is the floating point key choice
+	{
+		//createAVLonNumberKey<double>();
+	}
+
+	else if ((indexChoice >= 3) && (indexChoice <= 5)) // these are all string key choices
+	{
+		createAVLonStringKey();
 	}
 }
 
