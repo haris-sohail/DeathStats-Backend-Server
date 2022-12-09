@@ -235,6 +235,32 @@ void storeTreeInFile(AVL<int>& tree)
 	delete[] nodeFilename;
 }
 
+void moveCurrentFile(char*& filename, int numToSet)
+{
+	char initial[] = "../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_";
+
+	int i;
+	for (i = 0; i < strlen(initial); i++)
+	{
+		filename[i] = initial[i];
+	}
+
+	// now we store the number of the file
+	string fileNum = to_string(numToSet);
+
+	for (int j = 0; j < fileNum.length(); j++)
+	{
+		filename[i++] = fileNum[j];
+	}
+
+	char ext[] = ".csv\0";
+
+	for (int j = 0; j <= strlen(ext); j++)
+	{
+		filename[i++] = ext[j];
+	}
+}
+
 void createAVLonID()
 {
 	// first we iterate through all the files and create an AVL tree based on the index choice given
@@ -243,60 +269,64 @@ void createAVLonID()
 
 	// ------ declaring variables for filenames
 
+	int fileNum = 1;
+
 	char* filename = new char[200];
+
 	//char currentFile[] = "C:/Users/Haris'/source/repos/haris-sohail/DS-Project/datafiles/NCHS_-_Leading_Causes_of_Death__United_States_1.csv\0";
 
-	char currentFile[] = "../datafiles/sample1.csv\0";
-
-	strcpy(filename, currentFile);
-
-	// ------ opening the file
-
-	ifstream fileIn;
-
-	int keyForTree, line = 1;
-
-	string key;
-	int intKey;
-
-	char temp;
-
-	fileIn.open(filename);
-
-	if (fileIn)
+	for (int i = 0; i < 1; i++, fileNum++) // make index tree on all the files
 	{
-		while (fileIn.eof() == false) // read the file till the end of file
+		//moveCurrentFile(filename, fileNum);
+
+		strcpy(filename, "../datafiles/sample1.csv");
+
+		// ------ opening the file
+
+		ifstream fileIn;
+
+		int keyForTree, line = 1;
+
+		string key;
+		int intKey;
+
+		char temp;
+
+		fileIn.open(filename);
+
+		if (fileIn)
 		{
-			fileIn.get(temp);
-
-			if (temp == '\n') // in case we find a new line, the ID is stored right after it
+			while (fileIn.eof() == false) // read the file till the end of file
 			{
-				line++;
+				fileIn.get(temp);
 
-				getline(fileIn, key, ','); // read until the comma
-
-				if (fileIn.eof() == true) 
+				if (temp == '\n') // in case we find a new line, the ID is stored right after it
 				{
-					break;
+					line++;
+
+					getline(fileIn, key, ','); // read until the comma
+
+					if (fileIn.eof() == true)
+					{
+						break;
+					}
+
+					intKey = convertStringToInt(key.length(), key); // convert the character value of ID to int
+
+					indexTree.root = indexTree.insert(intKey, filename, line, indexTree.root); // insert the index in the tree
 				}
-
-				intKey = convertStringToInt(key.length(), key); // convert the character value of ID to int
-
-				indexTree.root = indexTree.insert(intKey, filename, line, indexTree.root); // insert the index in the tree
 			}
 		}
+		else
+		{
+			cout << "Error opening file" << endl;
+		}
+	}
 
-		// now we have to store the index tree in files
-
-		indexTree.LevelOrder(indexTree.root);
+	// now we have to store the index tree in files
 		
-		storeTreeInFile(indexTree);
-
-	}
-	else
-	{
-		cout << "Error opening file" << endl;
-	}
+	storeTreeInFile(indexTree);
+	
 
 	delete[] filename;
 	

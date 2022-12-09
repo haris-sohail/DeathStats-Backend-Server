@@ -1,5 +1,0 @@
-13
-../datafiles/sample1.csv,
-14,
-left:NULL
-right:NULL

@@ -1,5 +1,0 @@
-6
-../datafiles/sample1.csv,
-7,
-left:../trees/AVL_ID/node7.txt
-right:../trees/AVL_ID/node8.txt

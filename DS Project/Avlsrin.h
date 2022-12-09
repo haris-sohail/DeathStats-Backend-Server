@@ -1,38 +1,49 @@
 #pragma once
 #include"TreeNode.h"
 #include"Stack.h"
+#include"Util.h"
 #include"Queue.h"
-template <class T>
-class AVL
+
+class AVLString
 {
 public:
-	TreeNode<T>* root;
-	bool equalityFound = 0;
+	TreeNode<string>* root;
 
 public:
-	AVL()
+	AVLString()
 	{
 		root = NULL;
 	}
 
-	TreeNode<T>*& getRoot()
+	TreeNode<string>*& getRoot()
 	{
 		return root;
 	}
 
-	TreeNode<T>* insert(T data, string filename, int line, TreeNode<T>* root)
+	int getTotalAsciiValue(string toCalculate)
 	{
-		if ((root == NULL) && equalityFound == 0)
+		int asciiValue = 0;
+		for (int i = 0; i < toCalculate.length(); i++)
 		{
-			root = new TreeNode<T>;
-			
+			asciiValue += toCalculate[i];
+		}
+
+		return asciiValue;
+	}
+
+	TreeNode<string>* insert(string data, string filename, int line, TreeNode<string>* root)
+	{
+		if (root == NULL)
+		{
+			root = new TreeNode<string>;
+
 			root->val = data;
 			root->file.insert(filename);
 			root->line.insert(line);
 			root->left = NULL;
 			root->right = NULL;
 		}
-		else if ((equalityFound == 0) && (data < root->val)) // insertion in left subtree
+		else if (getTotalAsciiValue(data) < getTotalAsciiValue(root->val)) // insertion in left subtree
 		{
 			root->left = insert(data, filename, line, root->left);
 
@@ -49,7 +60,7 @@ public:
 				}
 			}
 		}
-		else if ((equalityFound == 0) && data > root->val) // insertion in right subtree
+		else if (getTotalAsciiValue(data) > getTotalAsciiValue(root->val)) // insertion in right subtree
 		{
 			root->right = insert(data, filename, line, root->right);
 
@@ -66,18 +77,13 @@ public:
 				}
 			}
 		}
-		else if (data == root->val)
-		{
-			root->file.insert(filename);
-			root->line.insert(line);
-		}
 
 		root->height = getMax(height(root->left), height(root->right)) + 1;
 
 		return root;
 	}
 
-	int height(TreeNode<T>* root)
+	int height(TreeNode<string>* root)
 	{
 		// base case: empty tree has a height of 0
 		if (root == nullptr) {
@@ -88,10 +94,10 @@ public:
 		return 1 + getMax(height(root->left), height(root->right));
 	}
 
-	bool retreive(T data)
+	bool retreive(string data)
 	{
-		TreeNode<T>* current = root;
-		T searchDataItem;
+		TreeNode<string>* current = root;
+		string searchDataItem;
 
 		// tree is not initialized
 		if (root == NULL)
@@ -104,15 +110,15 @@ public:
 		{
 			while (current)
 			{
-				if (data < current->val)
+				if (getTotalAsciiValue(data) < getTotalAsciiValue(current->val))
 				{
 					current = current->left;
 				}
-				else if (data > current->val)
+				else if (getTotalAsciiValue(data) > getTotalAsciiValue(current->val))
 				{
 					current = current->right;
 				}
-				else if (data == current->val)
+				else if (getTotalAsciiValue(data) == getTotalAsciiValue(current->val))
 				{
 					searchDataItem = current->val;
 					return true;
@@ -123,7 +129,7 @@ public:
 		}
 	}
 
-	void preOrder(TreeNode<T>*& root)
+	void preOrder(TreeNode<string>*& root)
 	{
 		if (root == NULL)
 		{
@@ -138,7 +144,7 @@ public:
 		preOrder(root->right);
 	}
 
-	void postOrder(TreeNode<T>*& root)
+	void postOrder(TreeNode<string>*& root)
 	{
 		if (root == NULL)
 		{
@@ -154,7 +160,7 @@ public:
 		cout << root->val;
 	}
 
-	void InOrder(TreeNode<T>*& root)
+	void InOrder(TreeNode<string>*& root)
 	{
 		if (root == NULL)
 		{
@@ -170,19 +176,19 @@ public:
 		preOrder(root->right);
 	}
 
-	void LevelOrder(TreeNode<T>* root)
+	void LevelOrder(TreeNode<string>* root)
 	{
 		// enque all children of the front TreeNode on the queue
 		// then deque the front TreeNode
-		TreeNode<T>* current = root;
-		Queue<TreeNode<T>> q;
+		TreeNode<string>* current = root;
+		Queue<TreeNode<string>> q;
 		q.Enqueue(*current);
 
 		TreeNode<int>* visit;
 
 		while (!q.isEmpty())
 		{
-			TreeNode<T> visit = q.Dequeue();
+			TreeNode<string> visit = q.Dequeue();
 			cout << visit.val << " ";
 
 			if (visit.left != NULL)
@@ -201,11 +207,11 @@ public:
 
 	}
 
-	T getMin()
+	string getMin()
 	{
-		TreeNode <T>* current = this->root;
+		TreeNode <string>* current = this->root;
 
-		T val;
+		string val;
 		// we are going to iterate towards the left until we find NULL
 
 		while (current)
@@ -218,11 +224,11 @@ public:
 		return val;
 	}
 
-	T getMin(TreeNode<T>*& startFrom)
+	string getMin(TreeNode<string>*& startFrom)
 	{
-		TreeNode <T>* current = this->root;
+		TreeNode <string>* current = this->root;
 
-		T val;
+		string val;
 		// we are going to iterate towards the left until we find NULL
 
 		while (current)
@@ -234,7 +240,7 @@ public:
 		}
 
 		return val;
-	}	
+	}
 
 	int getMax(int n1, int n2)
 	{
@@ -244,9 +250,9 @@ public:
 			return n2;
 	}
 
-	TreeNode<T>* LL(TreeNode<T>* K1)
+	TreeNode<string>* LL(TreeNode<string>* K1)
 	{
-		TreeNode<T>* K2;
+		TreeNode<string>* K2;
 		K2 = K1->right;
 
 		K1->right = K2->left;
@@ -257,9 +263,9 @@ public:
 		return K2;
 	}
 
-	TreeNode<T>* RR(TreeNode<T>* K1)
+	TreeNode<string>* RR(TreeNode<string>* K1)
 	{
-		TreeNode<T>* K2 = K1->left;
+		TreeNode<string>* K2 = K1->left;
 		K1->left = K2->right;
 		K2->right = K1;
 
@@ -268,21 +274,21 @@ public:
 		return K2;
 	}
 
-	TreeNode<T>* LR(TreeNode<T>* K1)
+	TreeNode<string>* LR(TreeNode<string>* K1)
 	{
 		K1->right = LL(K1->right);
 
 		return RR(K1);
 	}
 
-	TreeNode<T>* RL(TreeNode<T>* K1)
+	TreeNode<string>* RL(TreeNode<string>* K1)
 	{
 		K1->left = RR(K1->left);
 
 		return LL(K1);
 	}
 
-	TreeNode<T>* balance(TreeNode<T>* root)
+	TreeNode<string>* balance(TreeNode<string>* root)
 	{
 		if (height(root->left) - height(root->right) == 2) // left tree is heavy
 		{
