@@ -7,7 +7,6 @@ class AVL
 {
 public:
 	TreeNode<T>* root;
-	bool equalityFound = 0;
 
 public:
 	AVL()
@@ -22,7 +21,7 @@ public:
 
 	TreeNode<T>* insert(T data, string filename, int line, TreeNode<T>* root)
 	{
-		if ((root == NULL) && equalityFound == 0)
+		if ((root == NULL))
 		{
 			root = new TreeNode<T>;
 			
@@ -32,12 +31,12 @@ public:
 			root->left = NULL;
 			root->right = NULL;
 		}
-		else if ((equalityFound == 0) && (data < root->val)) // insertion in left subtree
+		else if (data < root->val) // insertion in left subtree
 		{
 			root->left = insert(data, filename, line, root->left);
 
 			//check imbalancing 
-			if (height(root->left) - height(root->right) == 2)
+			if (height(root->left) - height(root->right) == 2) // left is heavy
 			{
 				if (data < root->left->val)
 				{
@@ -49,7 +48,7 @@ public:
 				}
 			}
 		}
-		else if ((equalityFound == 0) && data > root->val) // insertion in right subtree
+		else if (data > root->val) // insertion in right subtree
 		{
 			root->right = insert(data, filename, line, root->right);
 
@@ -70,6 +69,8 @@ public:
 		{
 			root->file.insert(filename);
 			root->line.insert(line);
+
+			return root;
 		}
 
 		root->height = getMax(height(root->left), height(root->right)) + 1;
@@ -270,16 +271,16 @@ public:
 
 	TreeNode<T>* LR(TreeNode<T>* K1)
 	{
-		K1->right = LL(K1->right);
+		K1->right = RR(K1->right);
 
-		return RR(K1);
+		return LL(K1);
 	}
 
 	TreeNode<T>* RL(TreeNode<T>* K1)
 	{
-		K1->left = RR(K1->left);
+		K1->left = LL(K1->left);
 
-		return LL(K1);
+		return RR(K1);
 	}
 
 	TreeNode<T>* balance(TreeNode<T>* root)

@@ -1,0 +1,5 @@
+282.5
+../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_5.csv,
+962,
+left:../trees/AVL_ID/node1566.txt
+right:../trees/AVL_ID/node1569.txt
