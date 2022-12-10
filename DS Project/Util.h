@@ -321,8 +321,9 @@ public:
 	}
 };
 
-void displayMenu()
+int displayMenu()
 {
+	short choice;
 	cout << "\n\t      ****** WELCOME TO DATABASE MANAGEMENT SYSTEM ******                           \n\n";
 
 
@@ -337,6 +338,23 @@ void displayMenu()
 		<< "===  7- Exit                                                                 ===\n"
 		<< "================================================================================\n"
 		<< "================================================================================\n";
+
+	cin >> choice;
+
+	return choice;
+}
+
+void askForTree(bool& avlTree, bool& RBtree, bool& btree)
+{
+	short choice;
+
+	while (choice != 0)
+	{
+		cout << "Enter the trees you want." << endl;
+		cout << "1: AVL tree" << endl;
+		cout << "2: Red Black tree" << endl;
+		cout << "3: B - tree" << endl;
+	}
 }
 
 int askDataField()
