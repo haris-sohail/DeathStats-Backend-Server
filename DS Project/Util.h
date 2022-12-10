@@ -339,28 +339,36 @@ int displayMenu()
 		<< "================================================================================\n"
 		<< "================================================================================\n";
 
+	cout << endl << "What do you want to do? " << endl << endl;
+
+	cout << "Enter your choice: ";
+
 	cin >> choice;
 
 	return choice;
 }
 
-void askForTree(bool& avlTree, bool& RBtree, bool& btree)
+int askForTree()
 {
 	short choice;
 
-	while (choice != 0)
-	{
-		cout << "Enter the trees you want." << endl;
-		cout << "1: AVL tree" << endl;
-		cout << "2: Red Black tree" << endl;
-		cout << "3: B - tree" << endl;
-	}
+	cout << endl;
+	cout << "Which tree do you want? " << endl;
+	cout << "1: AVL tree" << endl;
+	cout << "2: Red Black tree" << endl;
+	cout << "3: B - tree" << endl;
+
+	cout << endl << "Enter your choice: ";
+	cin >> choice;
+
+	return choice;
 }
 
 int askDataField()
 {
 	int choice;
-	cout << "Which data field do you want to create an index tree? \n";
+	cout << endl;
+	cout << "On which data field do you want to create an index tree? \n";
 	cout << endl << "1: ID" << endl;
 	cout << "2: Year" << endl;
 	cout << "3: 113 Cause Name" << endl;

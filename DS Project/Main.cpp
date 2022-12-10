@@ -11,7 +11,8 @@ int main()
 	int choice = displayMenu();
 	if (choice == 1)
 	{
-		createAVL(askDataField());
+		int treechoice = askForTree();
+		createIndexTree(treechoice, askDataField());
 	}
 		
 }
