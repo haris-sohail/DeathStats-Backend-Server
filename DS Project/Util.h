@@ -468,6 +468,8 @@ void storeTreeInFile(AVL<T>& tree)
 	// 1. key
 	// 2. File(s)  :  file1, file2, .....
 	// 3. Line(s)  :  line1, line2, .....
+	// 4. left: 
+	// 5. right:
 	// ==============================
 
 	// store the nodes in a pre order fashion
