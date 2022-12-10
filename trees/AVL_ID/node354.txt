@@ -1,5 +1,0 @@
-39.1
-../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_3.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_3.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_4.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_4.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_8.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_8.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_8.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_8.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_8.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv,
-941,985,370,658,531,551,684,1177,1229,68,307,495,570,665,666,
-left:NULL
-right:../trees/AVL_ID/node355.txt

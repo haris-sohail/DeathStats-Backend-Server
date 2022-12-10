@@ -16,6 +16,311 @@
 #include"SLinkedList.h"
 using namespace std;
 
+class AVLString
+{
+public:
+	TreeNode<string>* root;
+
+public:
+	AVLString()
+	{
+		root = NULL;
+	}
+
+	TreeNode<string>*& getRoot()
+	{
+		return root;
+	}
+
+	int getTotalAsciiValue(string toCalculate)
+	{
+		int asciiValue = 0;
+		for (int i = 0; i < toCalculate.length(); i++)
+		{
+			asciiValue += toCalculate[i];
+		}
+
+		return asciiValue;
+	}
+
+	TreeNode<string>* insert(string data, string filename, int line, TreeNode<string>* root)
+	{
+		if (root == NULL)
+		{
+			root = new TreeNode<string>;
+
+			root->val = data;
+			root->file.insert(filename);
+			root->line.insert(line);
+			root->left = NULL;
+			root->right = NULL;
+		}
+		else if (getTotalAsciiValue(data) < getTotalAsciiValue(root->val)) // insertion in left subtree
+		{
+			root->left = insert(data, filename, line, root->left);
+
+			//check imbalancing 
+			if (height(root->left) - height(root->right) == 2)
+			{
+				if (getTotalAsciiValue(data) < getTotalAsciiValue(root->left->val))
+				{
+					root = RR(root);
+				}
+				else
+				{
+					root = RL(root);
+				}
+			}
+		}
+		else if (getTotalAsciiValue(data) > getTotalAsciiValue(root->val)) // insertion in right subtree
+		{
+			root->right = insert(data, filename, line, root->right);
+
+			// check imbalancing
+			if (height(root->right) - height(root->left) == 2) // right is heavy
+			{
+				if (getTotalAsciiValue(data) > getTotalAsciiValue(root->right->val))
+				{
+					root = LL(root);
+				}
+				else
+				{
+					root = LR(root);
+				}
+			}
+		}
+
+		else if (getTotalAsciiValue(data) == getTotalAsciiValue(root->val)) // data is equal to previous insertion
+		{
+			root->file.insert(filename);
+			root->line.insert(line);
+
+			return root;
+		}
+
+		root->height = getMax(height(root->left), height(root->right)) + 1;
+
+		return root;
+	}
+
+	int height(TreeNode<string>* root)
+	{
+		// base case: empty tree has a height of 0
+		if (root == nullptr) {
+			return -1;
+		}
+
+		// recur for the left and right subtree and consider maximum depth
+		return 1 + getMax(height(root->left), height(root->right));
+	}
+
+	bool retreive(string data)
+	{
+		TreeNode<string>* current = root;
+		string searchDataItem;
+
+		// tree is not initialized
+		if (root == NULL)
+		{
+			cout << "Tree is undefined" << endl;
+			return false;
+		}
+
+		else
+		{
+			while (current)
+			{
+				if (getTotalAsciiValue(data) < getTotalAsciiValue(current->val))
+				{
+					current = current->left;
+				}
+				else if (getTotalAsciiValue(data) > getTotalAsciiValue(current->val))
+				{
+					current = current->right;
+				}
+				else if (getTotalAsciiValue(data) == getTotalAsciiValue(current->val))
+				{
+					searchDataItem = current->val;
+					return true;
+				}
+			}
+
+			return false;
+		}
+	}
+
+	void preOrder(TreeNode<string>*& root)
+	{
+		if (root == NULL)
+		{
+			return;
+		}
+
+		// root - left - right
+		cout << root->val;
+
+		preOrder(root->left);
+
+		preOrder(root->right);
+	}
+
+	void postOrder(TreeNode<string>*& root)
+	{
+		if (root == NULL)
+		{
+			return;
+		}
+
+		// left - right - root
+
+		preOrder(root->left);
+
+		preOrder(root->right);
+
+		cout << root->val;
+	}
+
+	void InOrder(TreeNode<string>*& root)
+	{
+		if (root == NULL)
+		{
+			return;
+		}
+
+		// left - root - right
+
+		preOrder(root->left);
+
+		cout << root->val;
+
+		preOrder(root->right);
+	}
+
+	void LevelOrder(TreeNode<string>* root)
+	{
+		// enque all children of the front TreeNode on the queue
+		// then deque the front TreeNode
+		TreeNode<string>* current = root;
+		Queue<TreeNode<string>> q;
+		q.Enqueue(*current);
+
+		TreeNode<int>* visit;
+
+		while (!q.isEmpty())
+		{
+			TreeNode<string> visit = q.Dequeue();
+			cout << visit.val << " ";
+
+			if (visit.left != NULL)
+			{
+				//current = current->left;
+				q.Enqueue(*visit.left);
+			}
+
+			if (visit.right != NULL)
+			{
+				//current = current->right;
+				q.Enqueue(*visit.right);
+			}
+
+		}
+
+	}
+
+	string getMin()
+	{
+		TreeNode <string>* current = this->root;
+
+		string val;
+		// we are going to iterate towards the left until we find NULL
+
+		while (current)
+		{
+			val = current->val;
+
+			current = current->left;
+		}
+
+		return val;
+	}
+
+	string getMin(TreeNode<string>*& startFrom)
+	{
+		TreeNode <string>* current = this->root;
+
+		string val;
+		// we are going to iterate towards the left until we find NULL
+
+		while (current)
+		{
+			val = current->val;
+
+			startFrom = current;
+			current = current->left;
+		}
+
+		return val;
+	}
+
+	int getMax(int n1, int n2)
+	{
+		if (n1 > n2) return n1;
+
+		else
+			return n2;
+	}
+
+	TreeNode<string>* LL(TreeNode<string>* K1)
+	{
+		TreeNode<string>* K2;
+		K2 = K1->right;
+
+		K1->right = K2->left;
+		K2->left = K1;
+
+		K1->height = getMax(height(K1->left), height(K1->right)) + 1;
+		K2->height = getMax(height(K2->right), K1->height) + 1;
+		return K2;
+	}
+
+	TreeNode<string>* RR(TreeNode<string>* K1)
+	{
+		TreeNode<string>* K2 = K1->left;
+		K1->left = K2->right;
+		K2->right = K1;
+
+		K1->height = getMax(height(K1->left), height(K1->right)) + 1;
+		K2->height = getMax(height(K2->left), K1->height) + 1;
+		return K2;
+	}
+
+	TreeNode<string>* LR(TreeNode<string>* K1)
+	{
+		K1->right = RR(K1->right);
+
+		return LL(K1);
+	}
+
+	TreeNode<string>* RL(TreeNode<string>* K1)
+	{
+		K1->left = LL(K1->left);
+
+		return RR(K1);
+	}
+
+	TreeNode<string>* balance(TreeNode<string>* root)
+	{
+		if (height(root->left) - height(root->right) == 2) // left tree is heavy
+		{
+			RR(root);
+		}
+		else if (height(root->right) - height(root->left) == 2) // right is heavy
+		{
+			LL(root);
+		}
+	}
+};
+
 void displayMenu()
 {
 	cout << "\n\t      ****** WELCOME TO DATABASE MANAGEMENT SYSTEM ******                           \n\n";
@@ -244,6 +549,127 @@ void storeTreeInFile(AVL<T>& tree)
 	delete[] nodeFilename;
 }
 
+void storeStringTreeInFile(AVLString tree)
+{
+	node<string>* currentNodeFile;
+	node<int>* currentNodeLine;
+
+	char* nodeFilename = new char[50];
+	int fileNum = 1;
+
+	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt");
+
+	// data will be stored like this :
+	// 1. key
+	// 2. File(s)  :  file1, file2, .....
+	// 3. Line(s)  :  line1, line2, .....
+	// ==============================
+
+	// store the nodes in a pre order fashion
+
+	stack<TreeNode<string>*> nodeStack;
+
+	nodeStack.push(tree.root);
+
+	while (nodeStack.isEmpty() == false)
+	{
+		TreeNode<string>* node = nodeStack.pop();
+
+		// open the current node file
+
+		ofstream nodeO(nodeFilename);
+
+		node->nodeFileName = nodeFilename; // store the node filename so that we can access this later
+
+		// no we store the data
+
+		nodeO << node->val << endl;
+
+		// traverse through the list of file names and store them in a comma seperated way
+
+		currentNodeFile = node->file.head;
+
+		while (currentNodeFile)
+		{
+			nodeO << currentNodeFile->val << ",";
+			currentNodeFile = currentNodeFile->next;
+		}
+
+		nodeO << endl;
+
+		// traverse through the list of lines and store them in a comma seperated way
+
+		currentNodeLine = node->line.head;
+
+		while (currentNodeLine)
+		{
+			nodeO << currentNodeLine->val << ",";
+			currentNodeLine = currentNodeLine->next;
+		}
+
+		nodeO << endl;
+
+		fileNum++;
+		setFileNumber(fileNum, nodeFilename);
+		//nodeFilename[20]++;
+
+		// Push right and left children in the stack
+		if (node->right)
+			nodeStack.push(node->right);
+		if (node->left)
+			nodeStack.push(node->left);
+	}
+
+	// now open the node files again and store the left and right subtrees' reference 
+
+	fileNum = 1;
+	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt"); // reset to the first file
+
+	stack<TreeNode<string>*> nodeST;
+
+	nodeST.push(tree.root);
+
+	while (nodeST.isEmpty() == false)
+	{
+		TreeNode<string>* Node = nodeST.pop();
+
+		ofstream nodeSubO;
+
+		nodeSubO.open(nodeFilename, ios::app);
+
+		if (Node->left)
+		{
+			nodeSubO << "left:" << Node->left->nodeFileName << endl;
+		}
+		else
+		{
+			nodeSubO << "left:NULL" << endl;
+		}
+
+		if (Node->right)
+		{
+			nodeSubO << "right:" << Node->right->nodeFileName << endl;
+		}
+		else
+		{
+			nodeSubO << "right:NULL" << endl;
+		}
+
+
+		fileNum++;
+		setFileNumber(fileNum, nodeFilename);
+
+		// Push right and left children in the stack
+		if (Node->right)
+			nodeST.push(Node->right);
+		if (Node->left)
+			nodeST.push(Node->left);
+	}
+
+
+	delete[] nodeFilename;
+}
+
 void moveCurrentFile(char*& filename, int numToSet)
 {
 	char initial[] = "../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_";
@@ -286,6 +712,8 @@ bool checkKey(string key)
 	return 1;
 }
 
+
+
 template <typename T> 
 void createAVLonNumbers(int dataField)
 {
@@ -301,7 +729,7 @@ void createAVLonNumbers(int dataField)
 
 	//char currentFile[] = "C:/Users/Haris'/source/repos/haris-sohail/DS-Project/datafiles/NCHS_-_Leading_Causes_of_Death__United_States_1.csv\0";
 
-	for (int i = 0; i < 10; i++, fileNum++) // make index tree on all the files
+	for (int i = 0; i < 1; i++, fileNum++) // make index tree on all the files
 	{
 		moveCurrentFile(filename, fileNum);
 
@@ -414,305 +842,6 @@ void createAVLonNumbers(int dataField)
 }
 
 
-class AVLString
-{
-public:
-	TreeNode<string>* root;
-
-public:
-	AVLString()
-	{
-		root = NULL;
-	}
-
-	TreeNode<string>*& getRoot()
-	{
-		return root;
-	}
-
-	int getTotalAsciiValue(string toCalculate)
-	{
-		int asciiValue = 0;
-		for (int i = 0; i < toCalculate.length(); i++)
-		{
-			asciiValue += toCalculate[i];
-		}
-
-		return asciiValue;
-	}
-
-	TreeNode<string>* insert(string data, string filename, int line, TreeNode<string>* root)
-	{
-		if (root == NULL)
-		{
-			root = new TreeNode<string>;
-
-			root->val = data;
-			root->file.insert(filename);
-			root->line.insert(line);
-			root->left = NULL;
-			root->right = NULL;
-		}
-		else if (getTotalAsciiValue(data) < getTotalAsciiValue(root->val)) // insertion in left subtree
-		{
-			root->left = insert(data, filename, line, root->left);
-
-			//check imbalancing 
-			if (height(root->left) - height(root->right) == 2)
-			{
-				if (data < root->left->val)
-				{
-					root = RR(root);
-				}
-				else
-				{
-					root = RL(root);
-				}
-			}
-		}
-		else if (getTotalAsciiValue(data) > getTotalAsciiValue(root->val)) // insertion in right subtree
-		{
-			root->right = insert(data, filename, line, root->right);
-
-			// check imbalancing
-			if (height(root->right) - height(root->left) == 2) // right is heavy
-			{
-				if (data > root->right->val)
-				{
-					root = LL(root);
-				}
-				else
-				{
-					root = LR(root);
-				}
-			}
-		}
-
-		root->height = getMax(height(root->left), height(root->right)) + 1;
-
-		return root;
-	}
-
-	int height(TreeNode<string>* root)
-	{
-		// base case: empty tree has a height of 0
-		if (root == nullptr) {
-			return -1;
-		}
-
-		// recur for the left and right subtree and consider maximum depth
-		return 1 + getMax(height(root->left), height(root->right));
-	}
-
-	bool retreive(string data)
-	{
-		TreeNode<string>* current = root;
-		string searchDataItem;
-
-		// tree is not initialized
-		if (root == NULL)
-		{
-			cout << "Tree is undefined" << endl;
-			return false;
-		}
-
-		else
-		{
-			while (current)
-			{
-				if (getTotalAsciiValue(data) < getTotalAsciiValue(current->val))
-				{
-					current = current->left;
-				}
-				else if (getTotalAsciiValue(data) > getTotalAsciiValue(current->val))
-				{
-					current = current->right;
-				}
-				else if (getTotalAsciiValue(data) == getTotalAsciiValue(current->val))
-				{
-					searchDataItem = current->val;
-					return true;
-				}
-			}
-
-			return false;
-		}
-	}
-
-	void preOrder(TreeNode<string>*& root)
-	{
-		if (root == NULL)
-		{
-			return;
-		}
-
-		// root - left - right
-		cout << root->val;
-
-		preOrder(root->left);
-
-		preOrder(root->right);
-	}
-
-	void postOrder(TreeNode<string>*& root)
-	{
-		if (root == NULL)
-		{
-			return;
-		}
-
-		// left - right - root
-
-		preOrder(root->left);
-
-		preOrder(root->right);
-
-		cout << root->val;
-	}
-
-	void InOrder(TreeNode<string>*& root)
-	{
-		if (root == NULL)
-		{
-			return;
-		}
-
-		// left - root - right
-
-		preOrder(root->left);
-
-		cout << root->val;
-
-		preOrder(root->right);
-	}
-
-	void LevelOrder(TreeNode<string>* root)
-	{
-		// enque all children of the front TreeNode on the queue
-		// then deque the front TreeNode
-		TreeNode<string>* current = root;
-		Queue<TreeNode<string>> q;
-		q.Enqueue(*current);
-
-		TreeNode<int>* visit;
-
-		while (!q.isEmpty())
-		{
-			TreeNode<string> visit = q.Dequeue();
-			cout << visit.val << " ";
-
-			if (visit.left != NULL)
-			{
-				//current = current->left;
-				q.Enqueue(*visit.left);
-			}
-
-			if (visit.right != NULL)
-			{
-				//current = current->right;
-				q.Enqueue(*visit.right);
-			}
-
-		}
-
-	}
-
-	string getMin()
-	{
-		TreeNode <string>* current = this->root;
-
-		string val;
-		// we are going to iterate towards the left until we find NULL
-
-		while (current)
-		{
-			val = current->val;
-
-			current = current->left;
-		}
-
-		return val;
-	}
-
-	string getMin(TreeNode<string>*& startFrom)
-	{
-		TreeNode <string>* current = this->root;
-
-		string val;
-		// we are going to iterate towards the left until we find NULL
-
-		while (current)
-		{
-			val = current->val;
-
-			startFrom = current;
-			current = current->left;
-		}
-
-		return val;
-	}
-
-	int getMax(int n1, int n2)
-	{
-		if (n1 > n2) return n1;
-
-		else
-			return n2;
-	}
-
-	TreeNode<string>* LL(TreeNode<string>* K1)
-	{
-		TreeNode<string>* K2;
-		K2 = K1->right;
-
-		K1->right = K2->left;
-		K2->left = K1;
-
-		K1->height = getMax(height(K1->left), height(K1->right)) + 1;
-		K2->height = getMax(height(K2->right), K1->height) + 1;
-		return K2;
-	}
-
-	TreeNode<string>* RR(TreeNode<string>* K1)
-	{
-		TreeNode<string>* K2 = K1->left;
-		K1->left = K2->right;
-		K2->right = K1;
-
-		K1->height = getMax(height(K1->left), height(K1->right)) + 1;
-		K2->height = getMax(height(K2->left), K1->height) + 1;
-		return K2;
-	}
-
-	TreeNode<string>* LR(TreeNode<string>* K1)
-	{
-		K1->right = RR(K1->right);
-
-		return LL(K1);
-	}
-
-	TreeNode<string>* RL(TreeNode<string>* K1)
-	{
-		K1->left = LL(K1->left);
-
-		return RR(K1);
-	}
-
-	TreeNode<string>* balance(TreeNode<string>* root)
-	{
-		if (height(root->left) - height(root->right) == 2) // left tree is heavy
-		{
-			RR(root);
-		}
-		else if (height(root->right) - height(root->left) == 2) // right is heavy
-		{
-			LL(root);
-		}
-	}
-};
-
-
-
 void createAVLonStringKey(int dataField)
 {
 	// first we iterate through all the files and create an AVL tree based on the index choice given
@@ -792,6 +921,7 @@ void createAVLonStringKey(int dataField)
 					}
 
 					indexTree.root = indexTree.insert(key, filename, line, indexTree.root); // insert the index in the tree
+
 				}
 			}
 		}
@@ -803,7 +933,7 @@ void createAVLonStringKey(int dataField)
 
 	// now we have to store the index tree in files
 
-	//storeTreeInFile(indexTree);
+	storeStringTreeInFile(indexTree);
 
 
 	delete[] filename;

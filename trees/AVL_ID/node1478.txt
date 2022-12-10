@@ -1,5 +1,0 @@
-242.4
-../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_6.csv,
-7,
-left:NULL
-right:../trees/AVL_ID/node1479.txt

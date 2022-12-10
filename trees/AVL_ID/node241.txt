@@ -1,5 +1,0 @@
-27.8
-../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_2.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_2.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_2.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_5.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_5.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_5.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_5.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_5.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_5.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_7.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_7.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_9.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv,
-35,166,232,22,74,88,489,491,688,327,830,1076,437,459,
-left:NULL
-right:NULL

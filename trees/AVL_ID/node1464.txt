@@ -1,5 +1,0 @@
-238.7
-../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_5.csv,
-1052,
-left:NULL
-right:NULL
