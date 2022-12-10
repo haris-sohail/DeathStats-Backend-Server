@@ -427,9 +427,64 @@ double convertStringToDouble(string toBeConverted)
 	return stod(toBeConverted);
 }
 
-void setFileNumber(int numToSet, char*& destination)
+void storeInitial(char*& initial, int dataField)
 {
-	char initial[] = "../trees/AVL_ID/node";
+	char folderpath[50] = "../trees/";
+
+	int i;
+	for (i = 0; i <= strlen(folderpath); i++)
+	{
+		initial[i] = folderpath[i];
+	}
+
+	// store the folder according to the data field
+	char ID[] = "AVL_ID/node";
+	char Year[] = "AVL_Year/node\0";
+	char Cause113[] = "AVL_113 Cause Name/node";
+	char CauseName[] = "AVL_Cause Name/node";
+	char State[] = "AVL_State/node";
+	char Deaths[] = "AVL_Deaths/node";
+	char Age[] = "AVL_Age Adjusted Death Rate/node";
+
+	if (dataField == 1)
+	{
+		strcat(folderpath, ID);
+	}
+	else if (dataField == 2)
+	{
+		strcat(folderpath, Year);
+	}
+	else if (dataField == 3)
+	{
+		strcat(folderpath, Cause113);
+	}
+	else if (dataField == 4)
+	{
+		strcat(folderpath, CauseName);
+	}
+	else if (dataField == 5)
+	{
+		strcat(folderpath, State);
+	}
+	else if (dataField == 6)
+	{
+		strcat(folderpath, Deaths);
+	}
+	else if (dataField == 7)
+	{
+		strcat(folderpath, Age);
+	}
+
+	strcpy(initial, folderpath);
+
+}
+
+void setFileNumber(int numToSet, char*& destination, int dataField)
+{
+	char* initial = new char[40];
+
+	storeInitial(initial, dataField);
+
 
 	int i;
 	for (i = 0; i < strlen(initial); i++)
@@ -454,7 +509,7 @@ void setFileNumber(int numToSet, char*& destination)
 }
 
 template <typename T>
-void storeTreeInFile(AVL<T>& tree)
+void storeTreeInFile(AVL<T>& tree, int dataField)
 {
 	node<string>* currentNodeFile;
 	node<int>* currentNodeLine;
@@ -462,7 +517,7 @@ void storeTreeInFile(AVL<T>& tree)
 	char* nodeFilename = new char[50];
 	int fileNum = 1;
 
-	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt");
+	setFileNumber(1, nodeFilename, dataField); // set the file number to 1 in the beginning
 
 	// data will be stored like this :
 	// 1. key
@@ -517,7 +572,7 @@ void storeTreeInFile(AVL<T>& tree)
 		nodeO << endl;
 
 		fileNum++;
-		setFileNumber(fileNum, nodeFilename);
+		setFileNumber(fileNum, nodeFilename, dataField);
 		//nodeFilename[20]++;
 
 		// Push right and left children in the stack
@@ -530,7 +585,7 @@ void storeTreeInFile(AVL<T>& tree)
 	// now open the node files again and store the left and right subtrees' reference 
 
 	fileNum = 1;
-	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt"); // reset to the first file
+	setFileNumber(1, nodeFilename, dataField); // reset to the first file
 
 	stack<TreeNode<T>*> nodeST;
 
@@ -564,7 +619,7 @@ void storeTreeInFile(AVL<T>& tree)
 		
 
 		fileNum++;
-		setFileNumber(fileNum, nodeFilename);
+		setFileNumber(fileNum, nodeFilename, dataField);
 
 		// Push right and left children in the stack
 		if (Node->right)
@@ -577,7 +632,7 @@ void storeTreeInFile(AVL<T>& tree)
 	delete[] nodeFilename;
 }
 
-void storeStringTreeInFile(AVLString tree)
+void storeStringTreeInFile(AVLString tree, int dataField)
 {
 	node<string>* currentNodeFile;
 	node<int>* currentNodeLine;
@@ -585,12 +640,14 @@ void storeStringTreeInFile(AVLString tree)
 	char* nodeFilename = new char[50];
 	int fileNum = 1;
 
-	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt");
+	setFileNumber(1, nodeFilename, dataField); // reset to the first file
 
 	// data will be stored like this :
 	// 1. key
 	// 2. File(s)  :  file1, file2, .....
 	// 3. Line(s)  :  line1, line2, .....
+	// 4. left: 
+	// 5. right:
 	// ==============================
 
 	// store the nodes in a pre order fashion
@@ -638,8 +695,7 @@ void storeStringTreeInFile(AVLString tree)
 		nodeO << endl;
 
 		fileNum++;
-		setFileNumber(fileNum, nodeFilename);
-		//nodeFilename[20]++;
+		setFileNumber(fileNum, nodeFilename, dataField);
 
 		// Push right and left children in the stack
 		if (node->right)
@@ -651,7 +707,7 @@ void storeStringTreeInFile(AVLString tree)
 	// now open the node files again and store the left and right subtrees' reference 
 
 	fileNum = 1;
-	strcpy(nodeFilename, "../trees/AVL_ID/node1.txt"); // reset to the first file
+	setFileNumber(1, nodeFilename, dataField); // reset to the first file
 
 	stack<TreeNode<string>*> nodeST;
 
@@ -685,7 +741,7 @@ void storeStringTreeInFile(AVLString tree)
 
 
 		fileNum++;
-		setFileNumber(fileNum, nodeFilename);
+		setFileNumber(fileNum, nodeFilename, dataField);
 
 		// Push right and left children in the stack
 		if (Node->right)
@@ -740,6 +796,41 @@ bool checkKey(string key)
 	return 1;
 }
 
+string askForSearchKey_string()
+{
+	string key;
+
+	cout << "Enter the key to be searched: ";
+
+	cin >> key;
+
+	return key;
+}
+
+double askForSearchKey_Num()
+{
+	double key;
+	cout << "Enter the key to be searched: ";
+	cin >> key;
+
+	return key;
+}
+
+int askForSearchKeyType()
+{
+	int choice;
+	cout << endl;
+	cout << "Enter the type of key: " << endl;
+	cout << "1: Number" << endl;
+	cout << "2: String" << endl;
+
+	cout << endl << "Enter your choice: ";
+
+	cin >> choice;
+
+	return choice;
+}
+
 
 
 template <typename T> 
@@ -757,7 +848,7 @@ void createAVLonNumbers(int dataField)
 
 	//char currentFile[] = "C:/Users/Haris'/source/repos/haris-sohail/DS-Project/datafiles/NCHS_-_Leading_Causes_of_Death__United_States_1.csv\0";
 
-	for (int i = 0; i < 1; i++, fileNum++) // make index tree on all the files
+	for (int i = 0; i < 10; i++, fileNum++) // make index tree on all the files
 	{
 		moveCurrentFile(filename, fileNum);
 
@@ -862,7 +953,7 @@ void createAVLonNumbers(int dataField)
 
 	// now we have to store the index tree in files
 		
-	storeTreeInFile(indexTree);
+	storeTreeInFile(indexTree, dataField);
 	
 
 	delete[] filename;
@@ -961,7 +1052,7 @@ void createAVLonStringKey(int dataField)
 
 	// now we have to store the index tree in files
 
-	storeStringTreeInFile(indexTree);
+	storeStringTreeInFile(indexTree, dataField);
 
 
 	delete[] filename;
@@ -1004,5 +1095,20 @@ void createIndexTree(int treeChoice, int indexChoice)
 		cout << "Invalid." << endl;
 		return;
 	}
+
+}
+
+template <typename T>
+void pointSearch(T key)
+{
+	// traverse through the node files and search for keys
+	string key;
+
+	// ------ declaring variables for filenames
+
+	char* nodeFileName = new char[50];
+
+	//storeNodeFileName(nodeFileName, "../")
+
 
 }
