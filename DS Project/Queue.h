@@ -37,7 +37,7 @@ public:
 	{
 		if (isEmpty())
 		{
-			return 0;
+			cout << "Empty queue";
 		}
 		else
 		{

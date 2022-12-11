@@ -7,14 +7,14 @@ public:
 	TreeNode* left;
 	TreeNode* right;
 
-	SLinkedList<int> file;
+	string nodeFileName; // stores the filename in which node is stored
+	SLinkedList<string> file;
 	SLinkedList<int> line;
 
 	int height;
 
 	TreeNode()
 	{
-		val = 0;
 		left = NULL;
 		right = NULL;
 	}

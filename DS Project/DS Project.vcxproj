@@ -140,6 +140,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AVL.h" />
+    <ClInclude Include="Avlsrin.h" />
+    <ClInclude Include="AVLString.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Queue.h" />
     <ClInclude Include="SLinkedList.h" />
