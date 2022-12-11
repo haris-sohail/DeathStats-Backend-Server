@@ -1,0 +1,5 @@
+150.9
+../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_2.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_2.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_3.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_3.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_5.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_6.csv,
+986,1008,91,739,913,373,
+left:../trees/AVL_Age Adjusted Death Rate/node790.txt
+right:../trees/AVL_Age Adjusted Death Rate/node795.txt

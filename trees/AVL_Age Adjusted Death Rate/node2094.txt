@@ -1,0 +1,5 @@
+813
+../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_1.csv,
+407,
+left:../trees/AVL_Age Adjusted Death Rate/node2095.txt
+right:NULL

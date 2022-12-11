@@ -1,5 +1,5 @@
-698
+693
 ../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_1.csv,
-699,
-left:../trees/AVL_ID/node701.txt
-right:../trees/AVL_ID/node702.txt
+694,
+left:NULL
+right:NULL

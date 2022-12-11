@@ -1,5 +1,5 @@
-999
+993
 ../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_1.csv,
-1000,
+994,
 left:NULL
 right:NULL

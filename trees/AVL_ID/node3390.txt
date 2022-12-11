@@ -1,0 +1,5 @@
+3386
+../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_4.csv,
+271,
+left:../trees/AVL_ID/node3391.txt
+right:../trees/AVL_ID/node3392.txt

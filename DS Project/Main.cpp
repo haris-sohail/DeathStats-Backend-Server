@@ -9,27 +9,37 @@ using namespace std;
 
 int main()
 {	
-	int choice = displayMenu();
+	int choice = 0;
 	int dataField = 0;
-	if (choice == 1) // Create index tree
-	{
-		int treechoice = askForTree();
-		dataField = askDataField();
-		createIndexTree(treechoice, dataField);
-	}
-	else if (choice == 2) // Point Search
-	{
-		dataField = askDataFieldSearch();
+	cout << "\n\t      ****** WELCOME TO DATABASE MANAGEMENT SYSTEM ******                           \n\n";
 
-		if (dataField >= 3 && dataField <= 5) // the key is a string
+	while (choice != 7)
+	{
+		choice = displayMenu();
+		dataField = 0;
+
+
+		if (choice == 1) // Create index tree
 		{
-			pointSearchStrings(askForSearchKey_string(), dataField);
+			int treechoice = askForTree();
+			dataField = askDataField();
+			createIndexTree(treechoice, dataField);
 		}
-		else // key is a number
+		else if (choice == 2) // Point Search
 		{
-			pointSearchNumbers<double>(askForSearchKey_Num(), dataField);
+			dataField = askDataFieldSearch();
+
+			if (dataField >= 3 && dataField <= 5) // the key is a string
+			{
+				pointSearchStrings(askForSearchKey_string(), dataField);
+			}
+			else // key is a number
+			{
+				pointSearchNumbers<double>(askForSearchKey_Num(), dataField);
+			}
 		}
 	}
+	
 
 	
 		

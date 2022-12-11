@@ -324,7 +324,6 @@ public:
 int displayMenu()
 {
 	short choice;
-	cout << "\n\t      ****** WELCOME TO DATABASE MANAGEMENT SYSTEM ******                           \n\n";
 
 
 	cout << "================================================================================\n"
@@ -822,7 +821,8 @@ string askForSearchKey_string()
 
 	cout << "Enter the key to be searched: ";
 
-	cin >> key;
+	cin.ignore();
+	getline(cin, key);
 
 	return key;
 }
@@ -964,6 +964,7 @@ void createAVLonNumbers(int dataField)
 					}
 				}
 			}
+			//indexTree.LevelOrder(indexTree.root);
 		}
 		else
 		{
@@ -1168,14 +1169,118 @@ void storeFileNames(SLinkedList<string>& filename, string allFileNames)
 	
 }
 
+void storeLineNums(SLinkedList<int>& lineNums, string allLineNums)
+{
+	string tempLineNum;
+	int i, j = 0;
+	bool newLineFlag = 1;
+
+	// read till the ','
+	for (; newLineFlag;)
+	{
+		tempLineNum = "1000";
+		for (i = 0; ; i++, j++)
+		{
+			if (allLineNums[j] != ',')
+			{
+				tempLineNum[i] = allLineNums[j];
+			}
+			else if (allLineNums[j] == ',')
+			{
+				j++;
+
+				if (allLineNums[j] == '\n')
+				{
+					newLineFlag = false;
+				}
+
+				break;
+			}
+		}
+		tempLineNum[i] = '\0';
+
+		// now convert into int and store the line num in the linked list
+		lineNums.insert(stoi(tempLineNum));
+	}
+}
+void printTupleData(string tupleData)
+{
+	for (int i = 0; i < tupleData.length(); i++)
+	{
+		if (tupleData[i] != ',')
+		{
+			cout << tupleData[i];
+		}
+		else
+		{
+			cout << "         ";
+		}
+	}
+	cout << endl;
+}
+
+void printTuples(SLinkedList<string> filenames, SLinkedList<int> lineNums)
+{
+	cout << endl << "ID        113 Cause Name        Cause Name        State        Deaths        Age Adjusted Death Rate" << endl << endl;
+	string currentFileName;
+	int currentLineNum;
+	string tupleData;
+
+	node<string>* currentNodeFile = filenames.head; // iterator node for filenames linked list
+	node<int>* currentNodeLineNum = lineNums.head; // iterator node for line numbers linked list
+
+	while (currentNodeFile) // traverse through the linked lists, since both have same size, we only need one node pointer to check the end
+	{
+		ifstream fileIn;
+		// open the file
+		fileIn.open(currentNodeFile->val);
+
+		if (fileIn)
+		{
+			// go to the line number
+			for (int i = 1; i <= currentNodeLineNum->val; i++) // i = 1 because lines are starting from 1
+			{
+				getline(fileIn, tupleData, '\n'); // this stores the tuple data in string
+
+				if (i == currentNodeLineNum->val)
+				{
+					// print the data
+					printTupleData(tupleData);
+					cout << endl;
+				}
+			}
+		}
+		else
+		{
+			cout << endl << "Error opening file" << endl;
+		}
+		
+
+
+		// jump to the next nodes
+
+		currentNodeLineNum = currentNodeLineNum->next;
+		currentNodeFile = currentNodeFile->next;
+	}
+}
+
+void storeCstringinString(string& nodefilename, char* nodeFileName)
+{
+	for (int i = 0; i <= strlen(nodeFileName); i++)
+	{
+		nodefilename[i] = nodeFileName[i];
+	}
+}
+
 template <typename T>
 void pointSearchNumbers(T key, int dataField)
 {
 	double keyNumber;
 
+	ifstream fileIn;
+
 	// traverse through the node files and search for keys
 	string tempKey;
-	ifstream fileIn;
 
 	string allFileNames;
 	string allLineNums;
@@ -1195,10 +1300,19 @@ void pointSearchNumbers(T key, int dataField)
 
 	fileIn.open(nodeFileName);
 
+	string nodefilename = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+	storeCstringinString(nodefilename, nodeFileName);
+
 	if (fileIn)
 	{
+
 		while (fileIn.eof() == false)
 		{
+			ifstream fileIn;
+
+			fileIn.open(nodefilename);
+
 			// traverse through the files
 
 			getline(fileIn, tempKey, '\n'); // read till the first endline occurs. key is stored in the first line
@@ -1222,6 +1336,50 @@ void pointSearchNumbers(T key, int dataField)
 
 				// similarly store the line numbers in the list
 
+				// first read the fileNums and store in allFileNums
+
+				getline(fileIn, allLineNums, '\n');
+
+				allLineNums.append("\n"); // \n to indicate the end of string
+
+				storeLineNums(lineNums, allLineNums);
+
+				// now we go to the file and line nums and print the tuples one by one
+
+				printTuples(filenames, lineNums);
+
+				break;
+			}
+
+			else if (key < keyNumber) // go to left
+			{
+				// change the nodeFileName 
+
+				// read the left file
+
+				getline(fileIn, nodefilename, '\n'); // read the file Names
+				getline(fileIn, nodefilename, '\n'); // read the line numbers
+
+				getline(fileIn, nodefilename, ':'); // read till the : of "left:"
+
+				// now read the file name
+				getline(fileIn, nodefilename, '\n');
+			}
+
+			else if (key > keyNumber) // go right
+			{
+				// change the nodeFileName 
+
+				// read the left file
+
+				getline(fileIn, nodefilename, '\n'); // read the file Names
+				getline(fileIn, nodefilename, '\n'); // read the line numbers
+				getline(fileIn, nodefilename, '\n'); // read the left file name
+
+				getline(fileIn, nodefilename, ':'); // read till the : of "right:"
+
+				// now read the file name
+				getline(fileIn, nodefilename, '\n');
 			}
 
 		}
@@ -1237,16 +1395,23 @@ void pointSearchNumbers(T key, int dataField)
 
 void pointSearchStrings(string key, int dataField)
 {
-	// if the key is string, convert it to its total ascii value
+	int asciiValueKey = getTotalAsciiValue(key);
+	int asciiValue;
 
-	double keyNumber;
-	int tempAscii;
-
-	int asciiOfKey = getTotalAsciiValue(key);
+	ifstream fileIn;
 
 	// traverse through the node files and search for keys
 	string tempKey;
-	ifstream fileIn;
+
+	string allFileNames;
+	string allLineNums;
+
+	string filenameTemp;
+	string lineNumTemp;
+
+	// lists for storing all the filenames and line numbers of the tuples found
+	SLinkedList<string> filenames;
+	SLinkedList<int> lineNums;
 
 	// ------ declaring variables for filenames
 
@@ -1256,21 +1421,89 @@ void pointSearchStrings(string key, int dataField)
 
 	fileIn.open(nodeFileName);
 
+	string nodefilename = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+	storeCstringinString(nodefilename, nodeFileName);
+
 	if (fileIn)
 	{
+
 		while (fileIn.eof() == false)
 		{
+			ifstream fileIn;
+
+			fileIn.open(nodefilename);
+
 			// traverse through the files
 
 			getline(fileIn, tempKey, '\n'); // read till the first endline occurs. key is stored in the first line
 
-			// if the key is the string, use the ascii value calculated above for the traversal
+			asciiValue = getTotalAsciiValue(tempKey); // convert the string to double		
 
-			// now convert the read string to its ascii value and compare it to the ascii value found previously
+			// now compare it to the search key
 
-			tempAscii = getTotalAsciiValue(tempKey);
+			if (asciiValue == asciiValueKey) // key found 
+			{
+				// read the line number and file name
+
+				// reading all the filenames
+				getline(fileIn, allFileNames, '\n');
+
+				allFileNames.append("\n"); // \n to indicate the end of string
+
+				// now we store all the filenames in a list
+
+				storeFileNames(filenames, allFileNames);
+
+				// similarly store the line numbers in the list
+
+				// first read the fileNums and store in allFileNums
+
+				getline(fileIn, allLineNums, '\n');
+
+				allLineNums.append("\n"); // \n to indicate the end of string
+
+				storeLineNums(lineNums, allLineNums);
+
+				// now we go to the file and line nums and print the tuples one by one
+
+				printTuples(filenames, lineNums);
+
+				break;
+			}
+
+			else if (asciiValueKey < asciiValue) // go to left
+			{
+				// change the nodeFileName 
+
+				// read the left file
+
+				getline(fileIn, nodefilename, '\n'); // read the file Names
+				getline(fileIn, nodefilename, '\n'); // read the line numbers
+
+				getline(fileIn, nodefilename, ':'); // read till the : of "left:"
+
+				// now read the file name
+				getline(fileIn, nodefilename, '\n');
+			}
+
+			else if (asciiValueKey > asciiValue) // go right
+			{
+				// change the nodeFileName 
+
+				// read the left file
+
+				getline(fileIn, nodefilename, '\n'); // read the file Names
+				getline(fileIn, nodefilename, '\n'); // read the line numbers
+				getline(fileIn, nodefilename, '\n'); // read the left file name
+
+				getline(fileIn, nodefilename, ':'); // read till the : of "right:"
+
+				// now read the file name
+				getline(fileIn, nodefilename, '\n');
+			}
+
 		}
-	
 	}
 	else
 	{
