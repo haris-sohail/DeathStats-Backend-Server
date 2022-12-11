@@ -38,6 +38,23 @@ int main()
 				pointSearchNumbers<double>(askForSearchKey_Num(), dataField);
 			}
 		}
+		else if (choice == 3) // Range Search
+		{
+			double startingKey, endingKey;
+
+			dataField = askDataFieldSearch();
+
+			if (dataField >= 3 && dataField <= 5) // the key is a string
+			{
+				cout << endl << "Range query only works on numbers " << endl;
+			}
+			else // key is a number
+			{
+				askForRangeKey_Num(startingKey, endingKey);
+
+				RangeSearchNumbers(startingKey, endingKey, dataField);
+			}
+		}
 	}
 	
 

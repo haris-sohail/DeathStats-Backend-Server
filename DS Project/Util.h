@@ -827,6 +827,16 @@ string askForSearchKey_string()
 	return key;
 }
 
+void askForRangeKey_Num(double& startingKey, double& endingKey)
+{
+	cout << "Enter the starting key: ";
+	cin >> startingKey;
+
+	cout << endl;
+	cout << "Enter the ending key: ";
+	cin >> endingKey;
+}
+
 double askForSearchKey_Num()
 {
 	double key;
@@ -1221,7 +1231,6 @@ void printTupleData(string tupleData)
 
 void printTuples(SLinkedList<string> filenames, SLinkedList<int> lineNums)
 {
-	cout << endl << "ID        113 Cause Name        Cause Name        State        Deaths        Age Adjusted Death Rate" << endl << endl;
 	string currentFileName;
 	int currentLineNum;
 	string tupleData;
@@ -1346,6 +1355,7 @@ void pointSearchNumbers(T key, int dataField)
 
 				// now we go to the file and line nums and print the tuples one by one
 
+				cout << endl << "ID        113 Cause Name        Cause Name        State        Deaths        Age Adjusted Death Rate" << endl << endl;
 				printTuples(filenames, lineNums);
 
 				break;
@@ -1364,6 +1374,12 @@ void pointSearchNumbers(T key, int dataField)
 
 				// now read the file name
 				getline(fileIn, nodefilename, '\n');
+
+				if (nodefilename == "NULL")
+				{
+					cout << endl << "Not found" << endl;
+					break;
+				}
 			}
 
 			else if (key > keyNumber) // go right
@@ -1380,6 +1396,12 @@ void pointSearchNumbers(T key, int dataField)
 
 				// now read the file name
 				getline(fileIn, nodefilename, '\n');
+
+				if (nodefilename == "NULL")
+				{
+					cout << endl << "Not found" << endl;
+					break;
+				}
 			}
 
 		}
@@ -1467,6 +1489,7 @@ void pointSearchStrings(string key, int dataField)
 
 				// now we go to the file and line nums and print the tuples one by one
 
+				cout << endl << "ID        113 Cause Name        Cause Name        State        Deaths        Age Adjusted Death Rate" << endl << endl;
 				printTuples(filenames, lineNums);
 
 				break;
@@ -1485,6 +1508,13 @@ void pointSearchStrings(string key, int dataField)
 
 				// now read the file name
 				getline(fileIn, nodefilename, '\n');
+
+				if (nodefilename == "NULL")
+				{
+					cout << endl << "Not found" << endl;
+					break;
+				}
+				
 			}
 
 			else if (asciiValueKey > asciiValue) // go right
@@ -1501,6 +1531,12 @@ void pointSearchStrings(string key, int dataField)
 
 				// now read the file name
 				getline(fileIn, nodefilename, '\n');
+
+				if (nodefilename == "NULL")
+				{
+					cout << endl << "Not found" << endl;
+					break;
+				}
 			}
 
 		}
@@ -1511,4 +1547,150 @@ void pointSearchStrings(string key, int dataField)
 	}
 
 
+}
+
+void RangeSearchNumbers(double startingKey, double endingKey, int dataField)
+{
+	double keyNumber;
+
+	ifstream fileIn;
+
+	// traverse through the node files and search for keys
+	string tempKey;
+
+	string allFileNames;
+	string allLineNums;
+
+	string filenameTemp;
+	string lineNumTemp;
+
+
+	// ------ declaring variables for filenames
+
+	char* nodeFileName = new char[50];
+
+	setFileNumber(1, nodeFileName, dataField); // set the initial file name as node1(root) and set the folder appopriately
+
+	fileIn.open(nodeFileName);
+
+	string nodefilename = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+	cout << endl << "ID        113 Cause Name        Cause Name        State        Deaths        Age Adjusted Death Rate" << endl << endl;
+
+	storeCstringinString(nodefilename, nodeFileName);
+
+	if (fileIn)
+	{
+		stack<string> nodeFileStack;
+
+		nodeFileStack.push(nodefilename);
+
+		while (nodeFileStack.isEmpty() == false)
+		{
+			// lists for storing all the filenames and line numbers of the tuples found
+			SLinkedList<string> filenames;
+			SLinkedList<int> lineNums;
+
+			ifstream fileIn;
+
+			nodefilename = nodeFileStack.pop();
+
+			fileIn.open(nodefilename);
+
+			// traverse through the files
+
+			getline(fileIn, tempKey, '\n'); // read till the first endline occurs. key is stored in the first line
+
+			keyNumber = convertStringToDouble(tempKey); // convert the string to double
+
+			// now compare it to the search key
+
+			if ((keyNumber >= startingKey && keyNumber <= endingKey)) // key found 
+			{
+				// read the line number and file name
+
+				// reading all the filenames
+				getline(fileIn, allFileNames, '\n');
+
+				allFileNames.append("\n"); // \n to indicate the end of string
+
+				// now we store all the filenames in a list
+
+				storeFileNames(filenames, allFileNames);
+
+				// similarly store the line numbers in the list
+
+				// first read the fileNums and store in allFileNums
+
+				getline(fileIn, allLineNums, '\n');
+
+				allLineNums.append("\n"); // \n to indicate the end of string
+
+				storeLineNums(lineNums, allLineNums);
+
+				// now we go to the file and line nums and print the tuples one by one
+
+				printTuples(filenames, lineNums);
+
+				getline(fileIn, nodefilename, ':'); // read till the : of "left:"
+
+				getline(fileIn, nodefilename, '\n'); // read the left file name
+
+				if (nodefilename != "NULL")
+				{
+					nodeFileStack.push(nodefilename); // push the left filename
+				}
+				
+
+				getline(fileIn, nodefilename, ':'); // read till the : of "right:"
+
+				getline(fileIn, nodefilename, '\n'); // read the righ file name
+
+				if (nodefilename != "NULL")
+				{
+					nodeFileStack.push(nodefilename); // push the right filename
+				}
+
+			}
+
+			else
+			{
+				// push the left and right file names in the stack
+
+				// read the left file
+
+				getline(fileIn, nodefilename, '\n'); // read the file Names
+				getline(fileIn, nodefilename, '\n'); // read the line numbers
+
+				getline(fileIn, nodefilename, ':'); // read till the : of "left:"
+
+				// now read the file name
+				getline(fileIn, nodefilename, '\n');
+
+				if (nodefilename != "NULL")
+				{
+					nodeFileStack.push(nodefilename);
+				}
+
+
+				// read the right file
+
+				getline(fileIn, nodefilename, ':'); // read till the : of "right:"
+
+				// now read the file name
+				getline(fileIn, nodefilename, '\n');
+
+				if (nodefilename != "NULL")
+				{
+					nodeFileStack.push(nodefilename);
+				}
+			}
+			
+
+		}
+	}
+	else
+	{
+		cout << endl << "Error opening file" << endl;
+	}
 }
