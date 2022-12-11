@@ -384,6 +384,26 @@ int askDataField()
 	return choice;
 }
 
+int askDataFieldSearch()
+{
+	int choice;
+	cout << endl;
+	cout << "Enter the searching data field \n";
+	cout << endl << "1: ID" << endl;
+	cout << "2: Year" << endl;
+	cout << "3: 113 Cause Name" << endl;
+	cout << "4: Cause Name" << endl;
+	cout << "5: State" << endl;
+	cout << "6: Deaths" << endl;
+	cout << "7: Age-Adjusted Death Rate" << endl;
+
+	cout << endl << "Enter your choice: ";
+
+	cin >> choice;
+
+	return choice;
+}
+
 void readAndDisplay(string filename)
 {
 	ifstream fileIn;
@@ -1099,16 +1119,163 @@ void createIndexTree(int treeChoice, int indexChoice)
 }
 
 template <typename T>
-void pointSearch(T key)
+int getTotalAsciiValue(T toCalculate)
 {
+	int asciiValue = 0;
+	for (int i = 0; i < toCalculate.length(); i++)
+	{
+		asciiValue += toCalculate[i];
+	}
+
+	return asciiValue;
+}
+
+void storeFileNames(SLinkedList<string>& filename, string allFileNames)
+{
+	string tempFileName;
+	int i, j = 0;
+	bool newLineFlag = 1;
+
+	// read till the ','
+	for (; newLineFlag;)
+	{
+		tempFileName = "../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv";
+		for (i = 0; ; i++, j++)
+		{
+			if (allFileNames[j] != ',')
+			{
+				tempFileName[i] = allFileNames[j];
+			}
+			else if (allFileNames[j] == ',')
+			{
+				j++;
+
+				if (allFileNames[j] == '\n')
+				{
+					newLineFlag = false;
+				}
+
+				break;
+			}
+		}
+		tempFileName[i] = '\0';
+
+		// now store the filename in the linked list
+		filename.insert(tempFileName);
+	}
+	
+
+	
+}
+
+template <typename T>
+void pointSearchNumbers(T key, int dataField)
+{
+	double keyNumber;
+
 	// traverse through the node files and search for keys
-	string key;
+	string tempKey;
+	ifstream fileIn;
+
+	string allFileNames;
+	string allLineNums;
+
+	string filenameTemp;
+	string lineNumTemp;
+
+	// lists for storing all the filenames and line numbers of the tuples found
+	SLinkedList<string> filenames;
+	SLinkedList<int> lineNums;
 
 	// ------ declaring variables for filenames
 
 	char* nodeFileName = new char[50];
 
-	//storeNodeFileName(nodeFileName, "../")
+	setFileNumber(1, nodeFileName, dataField); // set the initial file name as node1(root) and set the folder appopriately
+
+	fileIn.open(nodeFileName);
+
+	if (fileIn)
+	{
+		while (fileIn.eof() == false)
+		{
+			// traverse through the files
+
+			getline(fileIn, tempKey, '\n'); // read till the first endline occurs. key is stored in the first line
+
+			keyNumber = convertStringToDouble(tempKey); // convert the string to double		
+
+			// now compare it to the search key
+
+			if (keyNumber == key) // key found 
+			{
+				// read the line number and file name
+
+				// reading all the filenames
+				getline(fileIn, allFileNames, '\n');
+
+				allFileNames.append("\n"); // \n to indicate the end of string
+
+				// now we store all the filenames in a list
+
+				storeFileNames(filenames, allFileNames);
+
+				// similarly store the line numbers in the list
+
+			}
+
+		}
+	}
+	else
+	{
+		cout << endl << "Error opening file" << endl;
+	}
+	
+
+
+}
+
+void pointSearchStrings(string key, int dataField)
+{
+	// if the key is string, convert it to its total ascii value
+
+	double keyNumber;
+	int tempAscii;
+
+	int asciiOfKey = getTotalAsciiValue(key);
+
+	// traverse through the node files and search for keys
+	string tempKey;
+	ifstream fileIn;
+
+	// ------ declaring variables for filenames
+
+	char* nodeFileName = new char[50];
+
+	setFileNumber(1, nodeFileName, dataField); // set the initial file name as node1(root) and set the folder appopriately
+
+	fileIn.open(nodeFileName);
+
+	if (fileIn)
+	{
+		while (fileIn.eof() == false)
+		{
+			// traverse through the files
+
+			getline(fileIn, tempKey, '\n'); // read till the first endline occurs. key is stored in the first line
+
+			// if the key is the string, use the ascii value calculated above for the traversal
+
+			// now convert the read string to its ascii value and compare it to the ascii value found previously
+
+			tempAscii = getTotalAsciiValue(tempKey);
+		}
+	
+	}
+	else
+	{
+		cout << endl << "Error opening file" << endl;
+	}
 
 
 }

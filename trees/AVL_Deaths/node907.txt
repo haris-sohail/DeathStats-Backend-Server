@@ -1,0 +1,5 @@
+956
+../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_6.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_6.csv,../datafiles/NCHS_-_Leading_Causes_of_Death__United_States_10.csv,
+688,907,760,
+left:NULL
+right:NULL
