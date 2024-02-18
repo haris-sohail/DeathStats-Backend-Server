@@ -1,6 +1,9 @@
 # Simple-Database-System
 
 ## Setup and Demonstration of the application
+
+![alt text](https://github.com/haris-sohail/Simple-Database-System/blob/master/server.png)
+
 🔗 Go to this drive link for the videos: https://drive.google.com/drive/folders/1MSfvlRxWjhQ8Dgoah40A8IMj-hs9GTTp?usp=drive_link
 
 ## Description
