@@ -1,4 +1,4 @@
-# Simple-Database-System
+# DeathStats-Backend-Server
 
 ## Setup and Demonstration of the application
 
